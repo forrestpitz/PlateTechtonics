@@ -1,10 +1,16 @@
 __author__ = 'fopitz'
 
-import random, math
-import constants, helper
+import random
+import math
+import Queue
+
+from PIL import Image
+
+import constants
+import helper
 from vector import Vector
 from plate import Plate
-from PIL import Image
+
 
 class Plates():
     def __init__(self, size = 128):
@@ -80,6 +86,32 @@ class Plates():
             self.fill_horizons.append([])
             self.empty.remove((x,y))
 
+
+    def flood_fill(self, x, y):
+        q = Queue()
+        for plate in self.plates:
+            q.put(plate.center)
+
+        while not q.empty():
+            x,y = q.get()
+            if self.plate_map[x][y] == None:
+                self.plates[plate].add_cell((x,y)) # Add square to plate
+                self.plate_map[x][y] = plate # fill out map
+
+                if self.is_valid_and_empty(x-1, y): q.put(x-1, y)
+                if self.is_valid_and_empty(x+1, y): q.put(x-1, y)
+                if self.is_valid_and_empty(x, y-1): q.put(x-1, y)
+                if self.is_valid_and_empty(x, y+1): q.put(x-1, y)
+                if self.is_valid_and_empty(x-1, y+1): q.put(x-1, y)
+                if self.is_valid_and_empty(x+1, y+1): q.put(x-1, y)
+                if self.is_valid_and_empty(x-1, y-1): q.put(x-1, y)
+                if self.is_valid_and_empty(x+1, y-1): q.put(x-1, y)
+
+    def is_valid_and_empty(self, x, y):
+        # Start by checking the bounds
+        if x > 0 and x < self.size - 1 and y > 0 and y > self.size -1:
+            return self.plate_map[x][y] == None
+        return False
 
     def fill_plates(self):
         print 'creating plates'
