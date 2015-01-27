@@ -35,6 +35,7 @@ class Plates():
 
         self.start_plates()
         self.fill_plates()
+        #self.flood_fill()
         self.find_edges()
 
     def show_map(self):
@@ -79,37 +80,40 @@ class Plates():
                 y = random.randint(0, size - 1)
 
             self.world_map[x][y] = self.plate_symbols[plate]
-            self.plate_map[x][y] = plate
+            self.plate_map[x][y] = plate # Comment me out if using flood fill
             self.centers.append((x,y))
 
             self.plates.append(Plate((x,y)))
             self.fill_horizons.append([])
             self.empty.remove((x,y))
 
-
-    def flood_fill(self, x, y):
-        q = Queue()
-        for plate in self.plates:
-            q.put(plate.center)
+    def flood_fill(self): # Make sure to comment out the line above
+        q = Queue.Queue()
+        for plate in xrange(len(self.plates)):
+            q.put((self.plates[plate].center, plate))
 
         while not q.empty():
-            x,y = q.get()
+            coordinate, plate_num = q.get()
+            x, y = coordinate
             if self.plate_map[x][y] == None:
-                self.plates[plate].add_cell((x,y)) # Add square to plate
-                self.plate_map[x][y] = plate # fill out map
+                self.plates[plate_num].add_cell((x, y)) # Add square to plate
+                self.plate_map[x][y] = plate_num # fill out plate map
+                self.world_map[x][y] = self.plate_symbols[plate_num] #add color to world map
 
-                if self.is_valid_and_empty(x-1, y): q.put(x-1, y)
-                if self.is_valid_and_empty(x+1, y): q.put(x-1, y)
-                if self.is_valid_and_empty(x, y-1): q.put(x-1, y)
-                if self.is_valid_and_empty(x, y+1): q.put(x-1, y)
-                if self.is_valid_and_empty(x-1, y+1): q.put(x-1, y)
-                if self.is_valid_and_empty(x+1, y+1): q.put(x-1, y)
-                if self.is_valid_and_empty(x-1, y-1): q.put(x-1, y)
-                if self.is_valid_and_empty(x+1, y-1): q.put(x-1, y)
+                if self.is_valid_and_empty(x-1, y): q.put(((x-1, y), plate_num))
+                if self.is_valid_and_empty(x+1, y): q.put(((x+1, y), plate_num))
+                if self.is_valid_and_empty(x, y-1): q.put(((x, y-1), plate_num))
+                if self.is_valid_and_empty(x, y+1): q.put(((x, y+1), plate_num))
+                if self.is_valid_and_empty(x-1, y+1): q.put(((x-1, y+1), plate_num))
+                if self.is_valid_and_empty(x+1, y+1): q.put(((x+1, y+1), plate_num))
+                if self.is_valid_and_empty(x-1, y-1): q.put(((x-1, y-1), plate_num))
+                if self.is_valid_and_empty(x+1, y-1): q.put(((x+1, y-1), plate_num))
+
+                q.task_done()
 
     def is_valid_and_empty(self, x, y):
         # Start by checking the bounds
-        if x > 0 and x < self.size - 1 and y > 0 and y > self.size -1:
+        if x > 0 and x < self.size - 1 and y > 0 and y < self.size -1:
             return self.plate_map[x][y] == None
         return False
 
@@ -312,9 +316,9 @@ def main():
     constants.init()
     plates = Plates()
     plates.show_map()
-    plates.populate_temperature()
-    plates.populate_wind()
-    plates.show_tempature_map()
+    #plates.populate_temperature()
+    #plates.populate_wind()
+    #plates.show_tempature_map()
 
 if __name__=='__main__':
     import time

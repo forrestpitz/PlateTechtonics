@@ -1,0 +1,18 @@
+1. Fix plate gen algorithm to be faster but still organic...
+2. Plate tectonics. We have the plates, now smash them together and change heights. Oceanic go under but should create mountains (this sounds hard)
+    a. scale? What's max and min height in our world
+3. Moisture. Steps in my mind are:
+    1. Start with even moisture everywhere
+    2. Evaporate based on temp if over water
+    3. Drop water (how? hieght should matter for rainfall...needs more consideration)
+    4. Move moisture using wind vecotr to calculate new moisture map
+    5. Repeat 1-4 n generations until complete
+
+If all the above is finished we should have height and biome using a Whittaker Diagram http://www.marietta.edu/~biol/biomes/whittaker.
+
+Future / Feature request:
+4. Add output to 3d renderer and move around in it.
+5. Perf improvements
+6. Scale up and see how big we can make it
+7. Fix 3d renderer so it's not minecraft, actual terrain would be sweet! (allows us to use partial integers).
+    a. Use adjacent corners when calculating "cube" idk
