@@ -13,7 +13,7 @@ from plate import Plate
 
 
 class Plates():
-    def __init__(self, size = 128):
+    def __init__(self, size = 512):
 
         self.size = size
         self.world_map = [[None for x in xrange(size)] for y in xrange(size)]
@@ -56,7 +56,7 @@ class Plates():
                 val = int(self.temperature_map[x][y])
                 pixels[x,y] = (val,val,val)
 
-        for i, plate in enumerate(self.plate_symbols):
+        for i, plate in enumerate(self.plates):
             for edge in plate.boundaries:
                 x, y = edge
                 if plate.is_oceanic:
@@ -111,10 +111,46 @@ class Plates():
 
                 q.task_done()
 
+        # Scan for orphan cells and associate them with their most common neighbor
+        for x in xrange(self.size):
+            for y in xrange(self.size):
+                q.put((x,y))
+
+        while not q.empty():
+            x, y = q.get()
+            if self.plate_map[x][y] == None:
+                neighbors = []
+                if self.bounds(x-1,y): neighbors.append(self.plate_map[x-1][y])
+                if self.bounds(x+1,y): neighbors.append(self.plate_map[x+1][y])
+                if self.bounds(x+1,y+1): neighbors.append(self.plate_map[x+1][y+1])
+                if self.bounds(x-1,y-1): neighbors.append(self.plate_map[x-1][y-1])
+                if self.bounds(x+1,y-1): neighbors.append(self.plate_map[x+1][y-1])
+                if self.bounds(x-1,y+1): neighbors.append(self.plate_map[x-1][y+1])
+                if self.bounds(x,y+1): neighbors.append(self.plate_map[x][y+1])
+                if self.bounds(x,y-1): neighbors.append(self.plate_map[x][y-1])
+
+                neighbors = filter(lambda a: a != None, neighbors)
+
+                if len(neighbors) > 0:
+                    plate_num = max(set(neighbors), key=neighbors.count)
+                    self.plate_map[x][y] = plate_num
+                    self.world_map[x][y] = self.plate_symbols[plate_num] #add color to world map
+                    q.task_done()
+                else:
+                    q.task_done()
+                    q.put((x,y))
+
+
+
     def is_valid_and_empty(self, x, y):
         # Start by checking the bounds
-        if x > 0 and x < self.size - 1 and y > 0 and y < self.size -1:
+        if self.bounds(x,y):
             return self.plate_map[x][y] == None
+        return False
+
+    def bounds(self, x, y):
+        if x > 0 and x < self.size - 1 and y > 0 and y < self.size -1:
+            return True
         return False
 
     def fill_plates(self):
@@ -316,9 +352,9 @@ def main():
     constants.init()
     plates = Plates()
     plates.show_map()
-    #plates.populate_temperature()
-    #plates.populate_wind()
-    #plates.show_tempature_map()
+    plates.populate_temperature()
+    plates.populate_wind()
+    plates.show_tempature_map()
 
 if __name__=='__main__':
     import time
