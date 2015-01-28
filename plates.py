@@ -34,8 +34,8 @@ class Plates():
         self.fill_horizons = []
 
         self.start_plates()
-        self.fill_plates()
-        #self.flood_fill()
+        #self.fill_plates()
+        self.flood_fill()
         self.find_edges()
 
     def show_map(self):
@@ -56,10 +56,10 @@ class Plates():
                 val = int(self.temperature_map[x][y])
                 pixels[x,y] = (val,val,val)
 
-        for plate in xrange(len(self.plate_symbols)):
-            for edge in self.plates[plate].boundaries:
+        for i, plate in enumerate(self.plate_symbols):
+            for edge in plate.boundaries:
                 x, y = edge
-                if self.plates[plate].is_oceanic:
+                if plate.is_oceanic:
                     pixels[x, y] = (0,0,100)
                 else:
                     pixels[x, y] = (100, 0, 0)
@@ -80,7 +80,7 @@ class Plates():
                 y = random.randint(0, size - 1)
 
             self.world_map[x][y] = self.plate_symbols[plate]
-            self.plate_map[x][y] = plate # Comment me out if using flood fill
+            #self.plate_map[x][y] = plate # Comment me out if using flood fill
             self.centers.append((x,y))
 
             self.plates.append(Plate((x,y)))
@@ -100,14 +100,14 @@ class Plates():
                 self.plate_map[x][y] = plate_num # fill out plate map
                 self.world_map[x][y] = self.plate_symbols[plate_num] #add color to world map
 
-                if self.is_valid_and_empty(x-1, y): q.put(((x-1, y), plate_num))
-                if self.is_valid_and_empty(x+1, y): q.put(((x+1, y), plate_num))
-                if self.is_valid_and_empty(x, y-1): q.put(((x, y-1), plate_num))
-                if self.is_valid_and_empty(x, y+1): q.put(((x, y+1), plate_num))
-                if self.is_valid_and_empty(x-1, y+1): q.put(((x-1, y+1), plate_num))
-                if self.is_valid_and_empty(x+1, y+1): q.put(((x+1, y+1), plate_num))
-                if self.is_valid_and_empty(x-1, y-1): q.put(((x-1, y-1), plate_num))
-                if self.is_valid_and_empty(x+1, y-1): q.put(((x+1, y-1), plate_num))
+                if self.is_valid_and_empty(x-1, y) and random.randrange(2) == 0: q.put(((x-1, y), plate_num))
+                if self.is_valid_and_empty(x+1, y) and random.randrange(2) == 0: q.put(((x+1, y), plate_num))
+                if self.is_valid_and_empty(x, y-1) and random.randrange(2) == 0: q.put(((x, y-1), plate_num))
+                if self.is_valid_and_empty(x, y+1) and random.randrange(2) == 0: q.put(((x, y+1), plate_num))
+                if self.is_valid_and_empty(x-1, y+1) and random.randrange(2) == 0: q.put(((x-1, y+1), plate_num))
+                if self.is_valid_and_empty(x+1, y+1) and random.randrange(2) == 0: q.put(((x+1, y+1), plate_num))
+                if self.is_valid_and_empty(x-1, y-1) and random.randrange(2) == 0: q.put(((x-1, y-1), plate_num))
+                if self.is_valid_and_empty(x+1, y-1) and random.randrange(2) == 0: q.put(((x+1, y-1), plate_num))
 
                 q.task_done()
 

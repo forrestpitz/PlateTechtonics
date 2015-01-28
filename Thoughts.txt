@@ -1,0 +1,30 @@
+Any way around the chicken and the egg of heat and wind?
+
+Each chunk should have biome info, temp info, moisture info, and 4 corner Heights. Use the 4 corners for diamond square to get more details so that a smaller plate map is ok
+
+What about merging chunks. Just because their corners match doesn't mean they will line up. Put a pin in this.
+
+Approach to adorning chunks:
+
+I had the same problem as you and I realised that the issue is even worse for other generated structures like mazes, towns or dungeons. So I figured to just go with a meta system where you can store block modifications regardless of if the chunk is generated or not. Then upon chunk generation, the meta system is checked to see if it contains modifications for said chunk.
+
+http://www.reddit.com/r/proceduralgeneration/comments/2t2dyy/trees_in_minecraft_like_worlds_help/
+
+We should use seeds to recreate maps!
+
+Three layers of terrain info:
+One for overall elevation (based on sim)
+one for terrain roughness (changed based on biome? I. E. Mountainous would be rough, desert would be smooth!)
+one for local detail (more thought needed here)
+
+Features :
+Music! (cellular automata for notes and chords :D)
+Caves
+Rivers (drop water in an evenx sheet and then make it run downhill (done during chunk gen? Once again how to handle making new chunks with features like this in place?)
+Lakes (covered by the above plan!
+Foliage based on terrain? (big, but solved problem that's worth exploring)
+Wildlife?
+Everything?
+
+Uses?
+* medieval theme. Generate castles and hamlets etc and then let the player roam
