@@ -1,5 +1,10 @@
 Any way around the chicken and the egg of heat and wind?
-
+  J:  First read the weather bit of this again http://experilous.com/1/blog/post/procedural-planet-generation
+      If we start with a heat gradient that is cool at the poles and then hot at the equator is that enough to creat a wind system?  From there hopefully the weather system would converge after some iterations?
+      How do ocians and continents effect heat and wind?
+      If feel like there are zones of starting heat such as polar, temprate, and tropical and then the wind currents blow that heat around to generate other bioms.
+      
+      
 Each chunk should have biome info, temp info, moisture info, and 4 corner Heights. Use the 4 corners for diamond square to get more details so that a smaller plate map is ok
 
 What about merging chunks. Just because their corners match doesn't mean they will line up. Put a pin in this.
