@@ -3,9 +3,11 @@ import random
 from cell import Cell
 
 class Plate():
-    def __init__(self, first_point):
+    def __init__(self, plate_id, first_point, plate_color):
 
-        self.cells = []
+        self.cells = {}
+
+        self.plate_id = plate_id
 
         self.center = first_point
         self.boundaries = []
@@ -23,6 +25,12 @@ class Plate():
 
         self.add_cell(first_point)
 
+        self.plate_color = plate_color
+
 
     def add_cell(self, coordinate):
-        self.cells.append(Cell(coordinate, self.elevation))
+        self.cells[coordinate] = Cell(coordinate, self.elevation)
+        #print 'adding cell', coordinate, 'to plate ', self.plate_id
+
+    def get_cell(self, coordinate):
+        return self.cells[coordinate]

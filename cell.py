@@ -1,7 +1,15 @@
 __author__ = 'fopitz'
-import random
+
 
 class Cell():
-    def __init__(self, first_point, elevation):
-        self.coordinate = first_point
+    def __init__(self, coordinate, elevation):
+        self.coordinate = coordinate
         self.elevation = elevation
+        self.temperature = 0
+        self.windspeed = None
+
+    def set_temperature(self, temperature):
+        self.temperature = temperature
+
+    def set_windspeed(self, windspeed):
+        self.windspeed = windspeed
